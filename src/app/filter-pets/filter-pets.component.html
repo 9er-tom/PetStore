@@ -1,0 +1,84 @@
+<span>
+  <p-toggleButton class="tableSwitchesMargin" [(ngModel)]="showKendo" onLabel="Kendo"
+                  offLabel="Prime"></p-toggleButton>
+
+  <div class="tableSwitchesMargin">
+    <ng-container *ngFor="let filterItem of filter">
+      <p-checkbox [(ngModel)]="selectedFilters" [inputId]="filterItem.status" (onChange)="toggleFilters()"
+                  [value]="filterItem"></p-checkbox>
+      <label style="margin: 1%" [for]="filterItem.status">{{filterItem.status | uppercase}}</label>
+    </ng-container>
+  </div>
+</span>
+
+
+<div *ngIf="(this.selectedPets$ | async) as pets">
+  <ng-container *ngIf="selectedFilters.length != 0 && pets.length != 0 ; else errorMessage">
+    <!--<table class="resultTable" *ngIf="pets.length != 0">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      <tr *ngFor="let pet of pets">
+        <td>{{pet.id}}</td>
+        <td>{{pet.name}}</td>
+        <td>{{pet.status}}</td>
+        <button class="btn btn-secondary-outline" routerLink="/pets/{{pet.id}}">Edit</button>
+        <button class="btn btn-warning-outline" (click)="api.deletePet(pet.id)">Delete</button>
+
+      </tr>
+    </table>-->
+    <ng-container *ngIf="showKendo; else showPrime">
+      <kendo-grid
+        (selectionChange)="goToSelection($event)"
+        *ngIf="pets.length != 0"
+        [kendoGridBinding]="pets"
+        [selectable]="selectableSettings"
+        [pageSize]="20"
+        [pageable]="true"
+        [sortable]="true"
+        [reorderable]="true">
+        <kendo-grid-column field="id" title="ID"></kendo-grid-column>
+        <kendo-grid-column field="name" title="Name"></kendo-grid-column>
+        <kendo-grid-column field="status" title="Status"></kendo-grid-column>
+      </kendo-grid>
+    </ng-container>
+
+    <ng-template #showPrime>
+      <p-table [value]="pets" class="resultTable" *ngIf="pets.length != 0" sortField="id" [sortOrder]="1">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id">ID
+              <p-sortIcon field="id"></p-sortIcon>
+            </th>
+            <th pSortableColumn="name">Name
+              <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="status">Status
+              <p-sortIcon field="status"></p-sortIcon>
+            </th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pet>
+          <tr>
+            <td>{{pet.id}}</td>
+            <td>{{pet.name}}</td>
+            <td>{{pet.status}}</td>
+            <span class="p-buttonset">
+          <button pButton class="p-button-primary" routerLink="/pets/{{pet.id}}">Edit</button>
+          <button pButton class="p-button-danger" (click)="api.deletePet(pet.id)">Delete</button>
+        </span>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-template>
+  </ng-container>
+</div>
+
+<ng-template #errorMessage>
+  <h3 style="color: lightcoral">Nothing to show</h3>
+</ng-template>
+

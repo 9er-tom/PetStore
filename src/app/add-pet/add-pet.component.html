@@ -1,0 +1,30 @@
+<h2>Add a pet</h2>
+<div>
+  <form [formGroup]="addPetForm" (ngSubmit)="onSubmit()">
+  <table>
+    <tr>
+      <td><label for="pet_id">Pet ID </label></td>
+      <td><input required type="number" id="pet_id" formControlName="id"></td>
+    </tr>
+    <tr>
+      <td><label for="pet_name">Pet Name </label></td>
+      <td><input required minlength="3" type="text" formControlName="name" id="pet_name"></td>
+    </tr>
+    <tr>
+      <td><label for="pet_status">Pet Status </label></td>
+      <td>
+        <select required id="pet_status" formControlName="status">
+          <ng-container *ngFor="let state of petStates | keyvalue">
+            <option [value]="state.value">{{state.value}}</option>
+          </ng-container>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <button type="submit" [disabled]="!addPetForm.valid">Add Pet</button>
+      </td>
+    </tr>
+  </table>
+  </form>
+</div>

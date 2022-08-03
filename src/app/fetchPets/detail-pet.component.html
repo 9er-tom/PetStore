@@ -1,0 +1,85 @@
+<h2>Pet Search</h2>
+
+<p-toggleButton class="tableSwitchesMargin" [(ngModel)]="showKendo" onLabel="Kendo"
+                offLabel="Prime"></p-toggleButton>
+
+<div *ngIf="(selectedPet$ | async) as selectedPet; else errorMessage">
+
+  <ng-container *ngIf="(petId$ | async) as petId">
+    <ng-container *ngIf="showKendo; else showPrime"> <!-- kendo -->
+      <div class="detailForms">
+        <h3>Kendo</h3>
+        <form class="k-form" [formGroup]="editPetFormGroupKendo" (ngSubmit)="onSubmitKendo(petId)">
+          <kendo-label>ID</kendo-label>
+          {{petId}}
+
+          <kendo-formfield>
+            <kendo-label [for]="petName" text="Name"></kendo-label>
+            <kendo-textbox
+              #petName
+              required
+              [value]="selectedPet.name"
+              [clearButton]="true"
+              formControlName="petName">
+            </kendo-textbox>
+            <kendo-formerror>Name is required</kendo-formerror>
+          </kendo-formfield>
+
+          <kendo-formfield>
+            <kendo-label [for]="petStatus">Status</kendo-label>
+            <kendo-dropdownlist
+              #petStatus
+              [data]="petStates"
+              [defaultItem]="selectedPet.status"
+              formControlName="petStatus">
+            </kendo-dropdownlist>
+            <kendo-formerror>Status is required</kendo-formerror>
+          </kendo-formfield>
+
+          <div class="k-form-buttons">
+            <button kendoButton themeColor="dark" [disabled]="!editPetFormGroupKendo.valid" type="submit">Edit Pet
+            </button>
+            <button kendoButton themeColor="error" (click)="api.deletePet(petId)">Delete Pet</button>
+          </div>
+        </form>
+      </div>
+    </ng-container>
+
+
+    <ng-template #showPrime> <!-- primeng -->
+      <div class="detailForms">
+        <h3>Prime</h3>
+        <form [formGroup]="editPetFormGroupPrime" (ngSubmit)="onSubmitPrime(petId)">
+          <table>
+            <tr>
+              <td><label>ID </label></td>
+              <td><label>{{petId}}</label></td>
+            </tr>
+            <tr>
+              <td><label for="petNamePrime">Pet Name</label></td>
+              <td><input id="petNamePrime" [value]="selectedPet.name" pInputText type="text" formControlName="petName">
+              </td>
+            </tr>
+            <tr>
+              <td><label for="petStatusPrime">Pet Status</label></td>
+              <td>
+                <p-dropdown [options]="petStates" id="petStatusPrime" formControlName="petStatus"></p-dropdown>
+              </td>
+            </tr>
+          </table>
+        </form>
+
+        <span class="p-buttonset">
+        <button pButton label="Edit Pet" icon="pi pi-save" class="p-button-secondary" type="button"
+                [disabled]="!editPetFormGroupPrime.valid" (click)="onSubmitPrime(petId)"></button>
+        <button pButton label="Delete Pet" icon="pi pi-times" class="p-button-danger" type="button"
+                (click)="api.deletePet(petId)"></button>
+      </span>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<ng-template #errorMessage>
+  <h3 style="color: lightcoral">No pet found</h3>
+</ng-template>

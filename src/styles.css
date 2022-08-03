@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+nav  {
+  margin-left: 2%;
+}
+
+.resultTable td {
+  border-right: solid grey 1px;
+  border-top: solid grey 1px;
+  border-collapse: collapse;
+}
+
+.resultTable th {
+  border-bottom: solid grey 2px;
+  border-collapse: collapse;
+}
+
