@@ -14,7 +14,6 @@ import {EffectFn} from "@ngneat/effects-ng";
 import {Router} from "@angular/router";
 import {tapResult} from "@ngneat/effects";
 import * as _ from "lodash/fp";
-import {WDClientService} from './wdclient.service';
 
 interface ICustomProp {
   isLoading: boolean;
@@ -37,7 +36,7 @@ export const VarStore = createStore({
 })
 export class ApiService extends EffectFn {
 
-  constructor(private client: ClientService, private wdClient: WDClientService, private router: Router) {
+  constructor(private client: ClientService, private router: Router) {
     super();
   }
 
